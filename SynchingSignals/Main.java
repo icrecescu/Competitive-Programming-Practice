@@ -2,6 +2,8 @@ import java.util.*;
 
 class Main{
 
+	private int k = 1;
+
 	public static void main(String[] agrs){
 		Main main = new Main();
 		main.start();
@@ -10,10 +12,10 @@ class Main{
 	private void start(){
 		Scanner scanner = new Scanner(System.in);
 		while(scanner.hasNextLine()){
-			calcLine(scanner.next());
+			calcLine(scanner.nextLine());
 		}
 	}
-	
+
 	private void calcLine(String set){
 		String[] stringSignals = set.split(" ");
 		int[] signals = new int[stringSignals.length];
@@ -22,17 +24,18 @@ class Main{
 		}
 
 		int min = findMin(signals);
-		
+
 		for(int i = min*2; i <= 3600; i++){
 			if(isAllGreen(signals, i)){
-				System.out.println(i);
+				String output = "Set " + k++ + " synchs again at " + getTime(i) + " after all turning green.";
+				System.out.println(output);
 				return;
 			}
 		}
-		System.out.println("  -- ");
+		System.out.println("Set " + k++ + " is unable to synch after one hour.");
 
 	}
-	
+
 	private int findMin(int[] array){
 		int min = array[0];
 		for(int i = 1; i < array.length; i++){
@@ -46,11 +49,18 @@ class Main{
 		for(int signal : signals){
 			int color = time / signal;
 			int greenDuration = time % signal;
-			if( !(color % 2 == 0 && greenDuration <= signal - 5)){
+			if( !(color % 2 == 0 && greenDuration < signal - 5)){
 				return false;
 			}
 		}
 		return true;
 	}
+
+	private String getTime(int time){
+		int minutes = time / 60;
+		int seconds = time % 60;
+		return minutes + " minute(s) and " + seconds + " second(s)";
+	}
+
 
 }
